@@ -1,6 +1,6 @@
 /**
-  E:Lista, posiciï¿½n, valor, variable temporal y resultado
-  S:Lista con la posiciï¿½n indicada reemplazada por el valor recibido
+  E:Lista, posición, valor, variable temporal y resultado
+  S:Lista con la posición indicada reemplazada por el valor recibido
   R:Ninguna
   O:Sustituir facilmente valores de una lista
  */
@@ -15,7 +15,7 @@ sustituirPos([Head|Tail],Pos,Val,Res,C):-Pos \= 0,Pos2 is Pos-1,append(Res,[Head
   E:Las dos filas anteriores, la fila actual a validar, y contador
   S:True si no hay cadenas de resultados de una fila
   R:Ninguna
-  O:Verificar que un tablero creado es vï¿½lido
+  O:Verificar que un tablero creado es válido
  */
 
 verificarColumna([],_,_,_).
@@ -54,10 +54,10 @@ estructuraTab(X):-estructuraAux([[-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,0,0,0,0,0,0,0,
 obtenerRandom(X):-random_between(1,9,X).
 
 /**
-  E:Lista, Posiciï¿½n y Variable X
-  S:Variable X convertida en el elemento de la lista en la posiciï¿½nindicada
-  R:Posiciï¿½n dentro del tamaï¿½o de la lista
-  O:Facilitar la obtenciï¿½n de valores de una lista
+  E:Lista, Posición y Variable X
+  S:Variable X convertida en el elemento de la lista en la posiciónindicada
+  R:Posición dentro del tamaño de la lista
+  O:Facilitar la obtención de valores de una lista
  */
 nesimaAux([Head|_],0,X):- X is Head.
 nesimaAux([_|Tail],Pos,X):-Pos2 is Pos-1,nesimaAux(Tail,Pos2,X).
@@ -75,8 +75,8 @@ verifFila([H|T],V):- H \= V,verifFila(T,V).
 
 
 /**
-  E:Matriz, posiciï¿½n y valor
-  S:True si la matriz no contiene el valor en la posiciï¿½n indicada de
+  E:Matriz, posición y valor
+  S:True si la matriz no contiene el valor en la posición indicada de
   alguna de sus filas
   R: Ninguna
   O: Verificar si una matriz repite valores en una misma columna
@@ -89,7 +89,7 @@ verifCol([Head|Tail],Pos,Val):-nesima(Head,Pos,X),X \= Val,verifCol(Tail,Pos,Val
 
 
 /**
-  E:Lista, Resultado, posiciï¿½n actual, matriz completa y resultado final
+  E:Lista, Resultado, posición actual, matriz completa y resultado final
   S:Lista llenada con numeros aleatorios sin repetir en filas ni
   columnas
   R:Ninguna
@@ -101,7 +101,7 @@ llenarFila([H|T],Res,Pos,Mat,W):-H \= 0,Pos2 is Pos+1,append(Res,[H],X),llenarFi
 
 
 /**
-  E:Estructura del tablero, matriz vacï¿½a, posiciï¿½n actual y variable
+  E:Estructura del tablero, matriz vacía, posición actual y variable
   resultado
   S:Tablero de kakuro asignado a la variable X
   R:Ninguna
@@ -122,7 +122,7 @@ crearTablero(X):- estructuraTab(Y),llenarMat(Y,[],0,X).
 /**
   E:Dos listas de enteros
   S:Diferencias de valores entre una lista y la otra
-  R:Las listas deben ser del mismo tamaï¿½o
+  R:Las listas deben ser del mismo tamaño
   O:Contar la cantidad de digitos distintos entre una lista y la otra
  */
 diferenciasFila([],[],Res,X):-Res = X.
@@ -150,4 +150,3 @@ cantCeros([H|T],Res,X):-H \= 0,cantCeros(T,Res,X).
 verificarTab([],[],Q,A,X,Y):-Q is X-Y, A = Y.
 verificarTab([H|T],[HU|TU],Q,A,X,Y):- diferenciasFila(H,HU,W,0),cantCeros(HU,Z,0),G is W+X,L is Z+Y,verificarTab(T,TU,Q,A,G,L).
 verificar(Res,User,X,Y):-verificarTab(Res,User,X,Y,0,0).
-

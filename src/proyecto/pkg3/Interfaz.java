@@ -9,7 +9,9 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import javax.swing.*;
 import org.jpl7.Query;
 /**
@@ -25,9 +27,16 @@ public class Interfaz {
     public JButton BotonReiniciar;
     public JButton BotonNuevo;
     public Tablero tab;
+    ArrayList<String> PistasArray = new ArrayList<String>(); // Create an ArrayList object
 
     public Interfaz(){
+     NuevoJuego();
+    }
+    
+   public  void NuevoJuego(){
        this.tab = new Tablero();
+       this.pistas=5;
+       this.PistasArray.clear();
        JTextField[][] campos= new  JTextField[9][9] ;
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,7 +46,7 @@ public class Interfaz {
         this.BotonPista.setBounds(700,100,170,30);
         frame.add(this.BotonPista);
         this.BotonPista.addActionListener((ActionEvent e) -> {
-            System.out.println("si!!!");
+           Pista();
         });  
         this.BotonVerificar=new JButton("Verificar mi solución");
         this.BotonVerificar.setBounds(700,150,170,30);
@@ -48,19 +57,20 @@ public class Interfaz {
         this.BotonSolucion=new JButton("Mostrar solución");
         this.BotonSolucion.setBounds(700,200,170,30);
         this.BotonSolucion.addActionListener((ActionEvent e) -> {
-            System.out.println("si!!!");
+            MostrarSolucion();
         }); 
         frame.add(this.BotonSolucion);
         this.BotonReiniciar=new JButton("Reiniciar");
         this.BotonReiniciar.setBounds(700,250,170,30);
         this.BotonReiniciar.addActionListener((ActionEvent e) -> {
-            System.out.println("si!!!");
+            Reiniciar();
         });
         frame.add(this.BotonReiniciar);
         this.BotonNuevo=new JButton("Nuevo juego");
         this.BotonNuevo.setBounds(700,300,170,30);
         this.BotonNuevo.addActionListener((ActionEvent e) -> {
-            System.out.println("si!!!");
+            frame.dispose();
+            NuevoJuego();
         });
         frame.add(this.BotonNuevo);
         int size=60;
@@ -70,6 +80,7 @@ public class Interfaz {
             for(int j=0;j<9;j++){
                campos[i][j]=new JTextField(String.valueOf(this.tab.board[i][j]),1);
                campos[i][j].setBounds(x,y, size, size);
+               
                if(this.tab.board[i][j]==-1){
                     campos[i][j].setBackground(Color.black);
                     campos[i][j].setEditable(false);
@@ -143,7 +154,7 @@ public class Interfaz {
           }
         }
    
-}
+   }
    public static boolean isIntegerDigit(String str) { 
         try {
           if(str.length()==1){
@@ -209,10 +220,6 @@ public class Interfaz {
       Integer X=Integer.parseInt(q2.oneSolution().get("X").toString());
       Integer K=Integer.parseInt(q2.oneSolution().get("K").toString());
       Integer casillas=contarCasilasJugables();
-      System.out.println(X);
-      System.out.println(K);
-      System.out.println(casillas);
-
       if(K==0 && X==0){
         JOptionPane.showMessageDialog (null, "juego finalizado exitosamente, felicidades!!", "Felicidades!", JOptionPane.INFORMATION_MESSAGE);
       }else{
@@ -221,12 +228,55 @@ public class Interfaz {
          }else{
           JOptionPane.showMessageDialog (null, "Hay  " + X.toString()  +" digitos incorrectos  y "+K.toString()+" casillas vacias de "+casillas.toString(), "ERROR!", JOptionPane.ERROR_MESSAGE);
          }
-      
       }
-
-
     }
 
-   } 
-  
+   }
+   
+   public void MostrarSolucion(){
+     for(int i=0;i<9;i++){
+       for(int j=0;j<9;j++){
+         if(this.tab.board[i][j]!=-1){
+          this.campos[i][j].setText(String.valueOf(this.tab.board[i][j]));
+         }   
+       }
+     }
+     this.BotonPista.setEnabled(false);
+     this.BotonVerificar.setEnabled(false);
+     this.BotonReiniciar.setEnabled(false);
+     this.BotonSolucion.setEnabled(false);
+
+   }
+   
+   public void Pista(){
+       if(this.pistas==0){
+        JOptionPane.showMessageDialog (null,"Ya no tienes pistas disponibles", "ERROR!", JOptionPane.ERROR_MESSAGE);
+       }else{
+           while(true){
+              int x=  new Random().nextInt(8 + 1) ;
+              int y=  new Random().nextInt(8 + 1) ;
+              String posicion=String.valueOf(x)+","+String.valueOf(y);
+              if(this.tab.board[x][y]!=-1 && !this.PistasArray.contains(posicion)){
+                  this.campos[x][y].setText(String.valueOf(this.tab.board[x][y]));
+                  this.PistasArray.add(posicion);
+                  this.pistas--;
+                  break;
+              }
+            }
+        }
+   }
+   
+   public void Reiniciar(){
+     this.pistas=5;
+     this.PistasArray.clear();
+     for(int i=0;i<9;i++){
+          for(int j=0;j<9;j++){
+           if(this.tab.board[i][j]!=-1){
+              this.campos[i][j].setText("");
+           }
+          }
+     }
+   }
+   
+   
 }
