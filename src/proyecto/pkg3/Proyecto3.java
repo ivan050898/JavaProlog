@@ -18,7 +18,7 @@ public class Proyecto3 {
      */
     public static void main(String[] args) {
        
-       Interfaz inter= new Interfaz();
+       Interfaz inter= new Interfaz();//se crea la interfaz
     }
     
 }

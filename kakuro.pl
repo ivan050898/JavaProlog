@@ -1,13 +1,13 @@
 /**
-  E:Lista, posición, valor, variable temporal y resultado
-  S:Lista con la posición indicada reemplazada por el valor recibido
+  E:Lista, posiciï¿½n, valor, variable temporal y resultado
+  S:Lista con la posiciï¿½n indicada reemplazada por el valor recibido
   R:Ninguna
   O:Sustituir facilmente valores de una lista
  */
 
-sustituirPos([],_,_,Res,C):-C=Res.
-sustituirPos([_|Tail],Pos,Val,Res,C):-Pos =:= 0,Pos2 is Pos-1,append(Res,[Val],X),sustituirPos(Tail,Pos2,Val,X,C).
-sustituirPos([Head|Tail],Pos,Val,Res,C):-Pos \= 0,Pos2 is Pos-1,append(Res,[Head],X),sustituirPos(Tail,Pos2,Val,X,C).
+sustituirPosicion([],_,_,Res,C):-C=Res.
+sustituirPosicion([_|Cola],Pos,Val,Res,C):-Pos =:= 0,Pos2 is Pos-1,append(Res,[Val],X),sustituirPosicion(Cola,Pos2,Val,X,C).
+sustituirPosicion([Cabeza|Cola],Pos,Val,Res,C):-Pos \= 0,Pos2 is Pos-1,append(Res,[Cabeza],X),sustituirPosicion(Cola,Pos2,Val,X,C).
 
 
 
@@ -15,17 +15,17 @@ sustituirPos([Head|Tail],Pos,Val,Res,C):-Pos \= 0,Pos2 is Pos-1,append(Res,[Head
   E:Las dos filas anteriores, la fila actual a validar, y contador
   S:True si no hay cadenas de resultados de una fila
   R:Ninguna
-  O:Verificar que un tablero creado es válido
+  O:validar que un tablero creado es vï¿½lido
  */
 
-verificarColumna([],_,_,_).
-verificarColumna([H1|T1],[H2|T2],[H3|T3],8):-not((H3 =:= 0, H2 =:= -1)),not((H1 =:= -1, H2 =:= 0, H3 =:= -1)),verificarColumna(T1,T2,T3,8).
-verificarColumna([H1|T1],[H2|T2],[H3|T3],Cont):-Cont \= 8,not((H1 =:= -1, H2 =:= 0, H3 =:= -1)),verificarColumna(T1,T2,T3,Cont).
+validarColumna([],_,_,_).
+validarColumna([H1|T1],[H2|T2],[H3|T3],8):-not((H3 =:= 0, H2 =:= -1)),not((H1 =:= -1, H2 =:= 0, H3 =:= -1)),validarColumna(T1,T2,T3,8).
+validarColumna([H1|T1],[H2|T2],[H3|T3],Cont):-Cont \= 8,not((H1 =:= -1, H2 =:= 0, H3 =:= -1)),validarColumna(T1,T2,T3,Cont).
 
 
 
-verificarFila(Ant,[Actual|[Sig|[]]]):- (Actual =:= -1;(Ant \= -1;Sig \= -1)),not((Sig =:=0,Actual =:= -1)).
-verificarFila(Ant,[Actual|[Sig|T]]):- (Actual =:= -1;(Ant \= -1;Sig \= -1)),verificarFila(Actual,[Sig|T]).
+validarFila(Ant,[Actual|[Sig|[]]]):- (Actual =:= -1;(Ant \= -1;Sig \= -1)),not((Sig =:=0,Actual =:= -1)).
+validarFila(Ant,[Actual|[Sig|T]]):- (Actual =:= -1;(Ant \= -1;Sig \= -1)),validarFila(Actual,[Sig|T]).
 
 
 
@@ -36,14 +36,11 @@ verificarFila(Ant,[Actual|[Sig|T]]):- (Actual =:= -1;(Ant \= -1;Sig \= -1)),veri
   O:Crear una matriz de kakuro de acuerdo a las reglas de juego
  */
 
-estructuraAux([],Res,_,Val,_,_):-Val=Res.
+crearEstucturaTab([],Res,_,Val,_,_):-Val=Res.
 
+crearEstucturaTab([H|T],Res,Cont,Val,FilAnt,FilAnt2):-repeat,random_between(1,8,Rand1),random_between(1,8,Rand2),random_between(1,8,Rand3),random_between(1,8,Rand4),random_between(1,8,Rand5),sustituirPosicion(H,Rand1,-1,[],Y),sustituirPosicion(Y,Rand2,-1,[],G),sustituirPosicion(G,Rand3,-1,[],P),sustituirPosicion(P,Rand5,-1,[],F),sustituirPosicion(F,Rand4,-1,[],W),validarFila(-1,W),validarColumna(FilAnt2,FilAnt,W,Cont),append(Res,[W],D),Cont2 is Cont+1,crearEstucturaTab(T,D,Cont2,Val,W,FilAnt).
 
-
-estructuraAux([H|T],Res,Cont,Val,FilAnt,FilAnt2):-repeat,random_between(1,8,Rand1),random_between(1,8,Rand2),random_between(1,8,Rand3),random_between(1,8,Rand4),random_between(1,8,Rand5),sustituirPos(H,Rand1,-1,[],Y),sustituirPos(Y,Rand2,-1,[],G),sustituirPos(G,Rand3,-1,[],P),sustituirPos(P,Rand5,-1,[],F),sustituirPos(F,Rand4,-1,[],W),verificarFila(-1,W),verificarColumna(FilAnt2,FilAnt,W,Cont),append(Res,[W],D),Cont2 is Cont+1,estructuraAux(T,D,Cont2,Val,W,FilAnt).
-
-
-estructuraTab(X):-estructuraAux([[-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0]],[],0,X,[],[]).
+crearEstructuraTab(X):-crearEstucturaTab([[-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0]],[],0,X,[],[]).
 
 /**
   E:Variable X
@@ -54,13 +51,13 @@ estructuraTab(X):-estructuraAux([[-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,0,0,0,0,0,0,0,
 obtenerRandom(X):-random_between(1,9,X).
 
 /**
-  E:Lista, Posición y Variable X
-  S:Variable X convertida en el elemento de la lista en la posiciónindicada
-  R:Posición dentro del tamaño de la lista
-  O:Facilitar la obtención de valores de una lista
+  E:Lista, Posiciï¿½n y Variable X
+  S:Variable X convertida en el elemento de la lista en la posiciï¿½nindicada
+  R:Posiciï¿½n dentro del tamaï¿½o de la lista
+  O:Facilitar la obtenciï¿½n de valores de una lista
  */
-nesimaAux([Head|_],0,X):- X is Head.
-nesimaAux([_|Tail],Pos,X):-Pos2 is Pos-1,nesimaAux(Tail,Pos2,X).
+nesimaAux([Cabeza|_],0,X):- X is Cabeza.
+nesimaAux([_|Cola],Pos,X):-Pos2 is Pos-1,nesimaAux(Cola,Pos2,X).
 nesima(Var,Pos,X):-nesimaAux(Var,Pos,X).
 
 
@@ -68,66 +65,48 @@ nesima(Var,Pos,X):-nesimaAux(Var,Pos,X).
   E:Fila y valor
   S:True si la fila no contiene el valor
   R:Ninguna
-  O:Verificar si una lista contiene un valor indicado
+  O:validar si una lista contiene un valor indicado
  */
-verifFila([],_).
-verifFila([H|T],V):- H \= V,verifFila(T,V).
+verificarFila([],_).
+verificarFila([H|T],V):- H \= V,verificarFila(T,V).
 
 
 /**
-  E:Matriz, posición y valor
-  S:True si la matriz no contiene el valor en la posición indicada de
+  E:Matriz, posiciï¿½n y valor
+  S:True si la matriz no contiene el valor en la posiciï¿½n indicada de
   alguna de sus filas
   R: Ninguna
-  O: Verificar si una matriz repite valores en una misma columna
+  O: validar si una matriz repite valores en una misma columna
  */
-verifCol([],_,_).
-verifCol([Head|Tail],Pos,Val):-nesima(Head,Pos,X),X \= Val,verifCol(Tail,Pos,Val).
+verificarColumna([],_,_).
+verificarColumna([Cabeza|Cola],Pos,Val):-nesima(Cabeza,Pos,X),X \= Val,verificarColumna(Cola,Pos,Val).
 
 
 
 
 
 /**
-  E:Lista, Resultado, posición actual, matriz completa y resultado final
+  E:Lista, Resultado, posiciï¿½n actual, matriz completa y resultado final
   S:Lista llenada con numeros aleatorios sin repetir en filas ni
   columnas
   R:Ninguna
   O:Llenar una fila de un tablero por completo
  */
 llenarFila([],Res,_,_,W):- W = Res.
-llenarFila([H|T],Res,Pos,Mat,W):-H =:= 0,repeat,obtenerRandom(Y),verifFila(Res,Y),verifCol(Mat,Pos,Y),append(Res,[Y],X),Pos2 is Pos+1,llenarFila(T,X,Pos2,Mat,W).
+llenarFila([H|T],Res,Pos,Mat,W):-H =:= 0,repeat,obtenerRandom(Y),verificarFila(Res,Y),verificarColumna(Mat,Pos,Y),append(Res,[Y],X),Pos2 is Pos+1,llenarFila(T,X,Pos2,Mat,W).
 llenarFila([H|T],Res,Pos,Mat,W):-H \= 0,Pos2 is Pos+1,append(Res,[H],X),llenarFila(T,X,Pos2,Mat,W).
 
 
 /**
-  E:Estructura del tablero, matriz vacía, posición actual y variable
+  E:Estructura del tablero, matriz vacï¿½a, posiciï¿½n actual y variable
   resultado
   S:Tablero de kakuro asignado a la variable X
   R:Ninguna
   O:Llenar un tablero de kakuro con numeros aleatorios sin repetir
  */
-llenarMat(_,Mat,9,G):- G = Mat.
-llenarMat([H|T],Mat,Cont,G):-llenarFila(H,[],0,Mat,X),append(Mat,[X],R),Cont2 is Cont+1,llenarMat(T,R,Cont2,G).
+llenarTablero(_,Mat,9,G):- G = Mat.
+llenarTablero([H|T],Mat,Cont,G):-llenarFila(H,[],0,Mat,X),append(Mat,[X],R),Cont2 is Cont+1,llenarTablero(T,R,Cont2,G).
 
-/**
-  E:Variable X
-  S:Tablero creado y asignado a variable X
-  R:Ninguna
-  O:Crear un tablero aleatorio de Kakuro
- */
-crearTablero(X):- estructuraTab(Y),llenarMat(Y,[],0,X).
-
-
-/**
-  E:Dos listas de enteros
-  S:Diferencias de valores entre una lista y la otra
-  R:Las listas deben ser del mismo tamaño
-  O:Contar la cantidad de digitos distintos entre una lista y la otra
- */
-diferenciasFila([],[],Res,X):-Res = X.
-diferenciasFila([H1|T1],[H2|T2],Res,X):-H1 \= H2,X2 is X+1,diferenciasFila(T1,T2,Res,X2).
-diferenciasFila([H1|T1],[H1|T2],Res,X):-diferenciasFila(T1,T2,Res,X).
 
 
 /**
@@ -136,10 +115,19 @@ diferenciasFila([H1|T1],[H1|T2],Res,X):-diferenciasFila(T1,T2,Res,X).
   R:Ninguna
   O:Contar los ceros de una lista
  */
-cantCeros([],Res,X):-Res = X.
-cantCeros([0|T],Res,X):-X2 is X+1,cantCeros(T,Res,X2).
-cantCeros([H|T],Res,X):-H \= 0,cantCeros(T,Res,X).
+camposVacios([],Res,X):-Res = X.
+camposVacios([0|T],Res,X):-X2 is X+1,camposVacios(T,Res,X2).
+camposVacios([H|T],Res,X):-H \= 0,camposVacios(T,Res,X).
 
+/**
+  E:Dos listas de enteros
+  S:Diferencias de valores entre una lista y la otra
+  R:Las listas deben ser del mismo tamaï¿½o
+  O:Contar la cantidad de digitos distintos entre una lista y la otra
+ */
+camposErroneos([],[],Res,X):-Res = X.
+camposErroneos([H1|T1],[H2|T2],Res,X):-H1 \= H2,X2 is X+1,camposErroneos(T1,T2,Res,X2).
+camposErroneos([H1|T1],[H1|T2],Res,X):-camposErroneos(T1,T2,Res,X).
 
 /**
   E:Tablero original, tablero del usuario, Variable X y Y
@@ -147,6 +135,17 @@ cantCeros([H|T],Res,X):-H \= 0,cantCeros(T,Res,X).
   R:Ninguna
   O:Validar un resultado
  */
-verificarTab([],[],Q,A,X,Y):-Q is X-Y, A = Y.
-verificarTab([H|T],[HU|TU],Q,A,X,Y):- diferenciasFila(H,HU,W,0),cantCeros(HU,Z,0),G is W+X,L is Z+Y,verificarTab(T,TU,Q,A,G,L).
-verificar(Res,User,X,Y):-verificarTab(Res,User,X,Y,0,0).
+validarTablero([],[],Q,A,X,Y):-Q is X-Y, A = Y.
+validarTablero([H|T],[HU|TU],Q,A,X,Y):- camposErroneos(H,HU,W,0),camposVacios(HU,Z,0),G is W+X,L is Z+Y,validarTablero(T,TU,Q,A,G,L).
+validar(Res,User,X,Y):-validarTablero(Res,User,X,Y,0,0).
+
+
+/**
+  E:Variable X
+  S:Tablero creado y asignado a variable X
+  R:Ninguna
+  O:Crear un tablero aleatorio de Kakuro
+ */
+
+generarTablero(X):- crearEstructuraTab(Y),llenarTablero(Y,[],0,X).
+
