@@ -259,6 +259,7 @@ public class Interfaz {
                   this.campos[x][y].setText(String.valueOf(this.tab.board[x][y]));
                   this.PistasArray.add(posicion);
                   this.pistas--;
+                  JOptionPane.showMessageDialog (null, "Te quedan : " + String.valueOf(this.pistas)+" intentos restantes", "Pistas", JOptionPane.INFORMATION_MESSAGE);
                   break;
               }
             }
